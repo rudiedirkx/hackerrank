@@ -6,38 +6,46 @@ header('Content-type: text/plain; charset=utf-8');
 
 // echo doWord('dkhc'); // works
 
-echo doWord('ddkhc'); // wrong
+echo doWord('ddkhc'); // makes 'dkdhc', but should make 'dhdkc'
 
-function doWord($word) {
+function doWord(string $word) {
 	$letters = $orig_letters = str_split(trim($word));
 	$size = count($letters);
 
-	for ($i = 2; $i < $size; $i++) {
+	for ($i = 2; $i <= $size; $i++) {
 		$letters = sortLastN($orig_letters, $i);
-		if ($letters != $orig_letters) {
-			return implode($letters);
+		if ($letters) {
+			return $letters;
 		}
-	}
-
-	$letters = $orig_letters;
-	$first = $letters[0];
-	$next = array_reduce($letters, function($next, $letter) use ($first) {
-		return $letter > $first ? ($next ? min($letter, $next) : $letter) : $next;
-	}, '');
-var_dump($next);
-	if ($next) {
-		unset($letters[array_search($next, $letters)]);
-		sort($letters);
-		return $next . implode($letters);
 	}
 
 	return 'no answer';
 }
 
-function sortLastN($letters, $last) {
+function sortLastN(array $letters, $last) {
 	$start = count($letters) - $last;
+	$suf = $suf0 = array_slice($letters, $start);
+	sort($suf);
+	if ($suf == $suf0) {
+		return false;
+	}
+
+	$gt = $suf0[0];
+	$bigger = array_filter($suf0, function($letter) use ($gt) {
+		return $letter > $gt;
+	});
+	if (!$bigger) {
+		return false;
+	}
+	$smallest = min($bigger);
+	if ($smallest == $gt) {
+		return false;
+	}
+
+	$i = array_search($smallest, $suf0);
+	unset($suf0[$i]);
+	array_unshift($suf0, $smallest);
+
 	$pre = array_slice($letters, 0, $start);
-	$suf = array_slice($letters, $start);
-	rsort($suf);
-	return array_merge($pre, $suf);
+	return implode($pre) . implode($suf0);
 }
