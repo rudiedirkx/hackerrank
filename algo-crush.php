@@ -1,9 +1,12 @@
 <?php
 
 // https://www.hackerrank.com/challenges/crush
+// 1000000 2
+// 140906 999280 90378
+// 651237 912072 87106
 
 const NUM_SIZE = 12;
-const BATCH_SIZE = 1e5;
+const BATCH_SIZE = 1e6;
 
 header('Content-type: text/plain; charset=utf-8');
 
