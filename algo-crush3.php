@@ -5,7 +5,10 @@
 // 140906 999280 90378
 // 651237 912072 87106
 
-$fp = fopen("php://stdin", "r");
+header('Content-type: text/plain; charset=utf-8');
+
+// $fp = fopen("php://stdin", "r");
+$fp = fopen("algo-crush-01.txt", "r");
 list($iNums, $iOps) = fscanf($fp, '%i %i');
 
 $numbers = [];
@@ -25,6 +28,14 @@ while (list($from, $to, $add) = fscanf($fp, '%f %f %f')) {
 
 echo number_format(memory_get_peak_usage() / 1e6) . " MB\n";
 
-print_r($numbers);
+// print_r($numbers);
 
-echo max($numbers);
+$max = $cur = 0;
+foreach ($numbers as $number) {
+	$cur += $number;
+	if ($cur > $max) {
+		$max = $cur;
+	}
+}
+
+echo $max;
